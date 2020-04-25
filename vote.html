@@ -47,41 +47,6 @@
 			padding: 10px 0 10px 0;
 		}
 
-		/* The slider itself */
-		.slider {
-		  -webkit-appearance: none;  /* Override default CSS styles */
-		  appearance: none;
-		  width: 100%; /* Full-width */
-		  height: 15px; /* Specified height */
-		  background: #d3d3d3; /* Grey background */
-		  outline: none; /* Remove outline */
-		  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-		  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-		  transition: opacity .2s;
-		}
-
-		/* Mouse-over effects */
-		.slider:hover {
-		  opacity: 1; /* Fully shown on mouse-over */
-		}
-
-		/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-		.slider::-webkit-slider-thumb {
-		  -webkit-appearance: none; /* Override default look */
-		  appearance: none;
-		  width: 25px; /* Set a specific slider handle width */
-		  height: 25px; /* Slider handle height */
-		  background: #4CAF50; /* Green background */
-		  cursor: pointer; /* Cursor on hover */
-		}
-
-		.slider::-moz-range-thumb {
-		  width: 25px; /* Set a specific slider handle width */
-		  height: 25px; /* Slider handle height */
-		  background: #4CAF50; /* Green background */
-		  cursor: pointer; /* Cursor on hover */
-		}
-
 		p {
 			margin: 0;
 			font-size: 12;
@@ -103,6 +68,101 @@
 			height: 20px;
 			margin-top:-20px;
 		}
+
+		// Range Slider
+
+
+		.range-slider {
+		  margin: 60px 0 0 0%;
+		}
+
+		.range-slider {
+		  width: 100%;
+		}
+
+		.range-slider__range {
+		  -webkit-appearance: none;
+		  width: calc(100% - (73px));
+		  height: 10px;
+		  border-radius: 5px;
+		  background: #d7dcdf;
+		  outline: none;
+		  padding: 0;
+		  margin: 0;
+		}
+		.range-slider__range::-webkit-slider-thumb {
+		  -webkit-appearance: none;
+		          appearance: none;
+		  width: 20px;
+		  height: 20px;
+		  border-radius: 50%;
+		  background: #2c3e50;
+		  cursor: pointer;
+		  -webkit-transition: background .15s ease-in-out;
+		  transition: background .15s ease-in-out;
+		}
+		.range-slider__range::-webkit-slider-thumb:hover {
+		  background: #1abc9c;
+		}
+		.range-slider__range:active::-webkit-slider-thumb {
+		  background: #1abc9c;
+		}
+		.range-slider__range::-moz-range-thumb {
+		  width: 20px;
+		  height: 20px;
+		  border: 0;
+		  border-radius: 50%;
+		  background: #2c3e50;
+		  cursor: pointer;
+		  -moz-transition: background .15s ease-in-out;
+		  transition: background .15s ease-in-out;
+		}
+		.range-slider__range::-moz-range-thumb:hover {
+		  background: #1abc9c;
+		}
+		.range-slider__range:active::-moz-range-thumb {
+		  background: #1abc9c;
+		}
+		.range-slider__range:focus::-webkit-slider-thumb {
+		  box-shadow: 0 0 0 3px #fff, 0 0 0 6px #1abc9c;
+		}
+
+		.range-slider__value {
+		  display: inline-block;
+		  position: relative;
+		  width: 60px;
+		  color: #fff;
+		  line-height: 20px;
+		  text-align: center;
+		  border-radius: 3px;
+		  background: #2c3e50;
+		  padding: 5px 10px;
+		  margin-left: 8px;
+		}
+		.range-slider__value:after {
+		  position: absolute;
+		  top: 8px;
+		  left: -7px;
+		  width: 0;
+		  height: 0;
+		  border-top: 7px solid transparent;
+		  border-right: 7px solid #2c3e50;
+		  border-bottom: 7px solid transparent;
+		  content: '';
+		}
+
+		::-moz-range-track {
+		  background: #d7dcdf;
+		  border: 0;
+		}
+
+		input::-moz-focus-inner,
+		input::-moz-focus-outer {
+		  border: 0;
+		}
+
+
+
 
 	</style>
 	<script type="text/javascript">
@@ -147,54 +207,11 @@
     <script type="text/javascript">
     	$(document).ready(function() {
     	  if (!window.candidates) return;
-    	  var candidates = window.candidates;
-    	  var sum = 0;
-    	  var tb = document.createElement('table');
-  
-		  for(var j = 0; j < candidates.length; j++) {
-		    var row = candidates[j];
-		    
-    	  	var tr = document.createElement('tr');
-		    var td = document.createElement('td');
-		    td.innerText = row.Nickname;
-		    
-		    tr.appendChild(td);
 
-
-		    var td2 = document.createElement('td');
-		    td2.id = row.Did;
-		    td2.setAttribute("class", "percentage");
-		    td2.innerText = parseInt(100/candidates.length) + "%";
-			sum += parseInt(100/candidates.length);
-		  	$("#totalPercentage").text(sum+'%');
-
-		    tr.appendChild(td2);
-		    
-		    var td3 = document.createElement('td');
-
-		    var it = document.createElement('input');
-		    it.setAttribute("type", "range");
-			it.setAttribute("name", row.Did );
-			it.setAttribute("step", "1");
-			it.setAttribute("value", parseInt(100/candidates.length));
-			it.setAttribute("min", "0");
-			it.setAttribute("max", "100");
-			it.setAttribute("class", "slider");
-			it.onchange = function() {
-				document.getElementById( this.name ).innerText=this.value+'%';
-			}
-			td3.appendChild(it);
-		    tr.appendChild(td3);
-
-		    tb.appendChild(tr);
-		  }
-		  
-		  $("#candidates").append(tb);
-
-		  $("input[type=range]").change(function () {
-		  	  sum = 0;
-		  	  $(".percentage").each(function(i, v){
-		  		  sum += parseInt(v.innerText);
+    	  var updateTotal = function () {
+		  	  var sum = 0;
+		  	  $(".range-slider__range").each(function(i, v){
+		  		  sum += parseInt(v.value);
 		  	  });
 		  	  $("#totalPercentage").text(sum+'%');
 		  	  if (sum < 1 || sum > 100) {
@@ -203,7 +220,78 @@
 		  	  else {
 		  		  $("#totalPercentage").css("color", "black");	
 		  	  }
-		  });
+    	  };
+
+		  var rangeSlider = function(){
+		    var slider = $('.range-slider'),
+		      range = $('.range-slider__range'),
+		      value = $('.range-slider__value');
+		    
+		    slider.each(function(){
+
+		      value.each(function(){
+		        var value = $(this).prev().attr('value');
+		        $(this).html(value);
+		        updateTotal();
+		      });
+
+		      range.on('input', function(){
+		        $(this).next(value).html(this.value);
+		        updateTotal();
+		      });
+		    });
+		  };
+
+
+    	  var candidates = window.candidates;
+    	  var sum = 0;
+    	  var tb = document.createElement('table');
+  
+		  for(var j = 0; j < candidates.length; j++) {
+		    var row = candidates[j];
+		    
+    	  	var tr = document.createElement('tr');
+
+    	  	tr.setAttribute("class", "range-wrap");
+
+		    var td = document.createElement('td');
+		    td.innerText = row.Nickname;
+		    
+		    tr.appendChild(td);
+
+		    var td3 = document.createElement('td');
+
+		    var dv = document.createElement('div');
+		    dv.setAttribute("class", "range-slider");
+
+		    var it = document.createElement('input');
+		    it.setAttribute("type", "range");
+			it.setAttribute("name", row.Did );
+			it.setAttribute("step", "1");
+			it.setAttribute("value", parseInt(100/candidates.length));
+			it.setAttribute("min", "0");
+			it.setAttribute("max", "100");
+			it.setAttribute("class", "range-slider__range");
+			it.onchange = function() {
+				document.getElementById( this.name ).innerText=this.value+'%';
+			}
+
+			var sp = document.createElement('span');
+			sp.setAttribute("class", "range-slider__value");
+
+			dv.appendChild(it);
+			dv.appendChild(sp);
+
+			td3.appendChild(dv);
+
+		    tr.appendChild(td3);
+
+		    tb.appendChild(tr);
+		  }
+		  
+		  $("#candidates").append(tb);
+
+		  rangeSlider();
 
 		  $("#votebtn").click(function() {
 		  	  var DIDs = "";
