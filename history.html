@@ -323,15 +323,26 @@
 	        	
 	        }
 	        else if (txid) {
+        		$("body").loading('toggle');
 		    	$.ajax({
 		            url: 'https://node1.elaphant.app/api/v1/transaction/'+txid,
 					type: 'get',
 		            data:{},
 		            dataType: "json",
 		            success: function (data) {
+		            	if (data.Error) {
+		            		$("#waiting").show();
+		            		$("#vote-info").hide();
+		            		return;
+	            		}
+
 		            	var out_address = data.Result.vout[2].address;
 		            	if (out_address)
 		            		loadData(out_address);
+		            },
+		            complete: function() {
+
+	        			$("body").loading('stop');
 		            }
 		        });
 
