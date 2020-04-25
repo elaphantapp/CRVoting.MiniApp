@@ -1,0 +1,346 @@
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+	<link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+	<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://unpkg.com/jquery-easy-loading/dist/jquery.loading.min.js"></script>
+	<script type="text/javascript" src="./elakeypair.min.js"></script>
+
+	<style>
+		html,body{
+			min-height:100%;
+			_height:100%;
+			margin: 0;
+			padding: 0;
+			background-color: E5E5E5;
+		}
+
+		#pageTitle {
+			text-align: center; 
+			color: E5E5E5;
+			background-color: 949EB9; 
+			padding: 15px
+
+		}
+
+		.vote-area {
+			text-align: center;
+		}
+
+		.vote-area p {
+			text-align: left;
+			margin-left: 1em;
+			margin-bottom: 0.5em;
+		}
+
+		.vote-header {
+			width: 94%;
+		}
+
+		.vote-header, .candidates>li{
+			-moz-box-shadow:2px 2px 5px #333333; 
+			-webkit-box-shadow:2px 2px 5px #333333; 
+			box-shadow:2px 2px 5px #333333;
+
+			-moz-border-radius:0.4em; 
+			-webkit-border-radius:0.4em; 
+			border-radius:0.4em;
+
+			background-color: white;
+			margin: auto;
+		}
+
+		.vote-header tr {
+			font-size: 14px;
+		}
+
+		.vote-header td {
+
+			padding: 0.3em;
+		}
+
+		.vote-header tr td:first-child {
+			text-align: right;
+			color: 616161;
+		}
+
+		.candidates {
+			list-style-type: none;
+			text-align: center;
+			margin: 0.2em auto;
+			
+			padding: 0;
+			width: 94%;
+		}
+
+		.candidates li:first-child {
+			font-size: 16px;
+			color: black;
+		}
+
+		.candidates li {
+			text-align: left;
+			list-style-type: none;
+			margin: 0.5em auto;
+			padding: 0.2em 0.5em 0.2em 0.5em;
+			font-size: 14px;
+			color: 616161;
+		}
+
+		.candidate-item {
+			padding: 0;
+			margin: 0;
+		}
+
+		.candidate-item li:nth-child(3) {
+			color: 616161;
+			font-size:14px;
+			word-break: break-all;
+		}
+
+
+		p {
+			margin: 0;
+			font-size: 12;
+		}
+
+		#waiting, #vote-info {
+			text-align: center;
+			display: none;
+		}
+
+		#waiting p {
+			margin: 2em;
+		}
+
+		#btnArea {
+			text-align: center; 
+			padding-top: 20px;
+			padding-bottom:50px
+		}
+		#btnArea p{
+			text-align: center; 
+
+		}
+
+		#footer {
+			text-align: center;
+			vertical-align: bottom;
+			height: 20px;
+			margin-top:-20px;
+		}
+
+		.dataTables_filter, .dataTables_info {
+			display: none;
+		}
+
+	</style>
+	<script type="text/javascript">
+
+
+	</script>
+</head>
+<body>
+	<h1 id='pageTitle'>
+		CRC Voting
+	</h1>
+
+
+	<div id="waiting">
+		<p >Please wait a moment, your transaction is waiting for miners to pack.</p>
+    	<a id="retry" class="btn btn-retry" href="javascript:location.reload()"> <i class="icon-large"></i> Retry </a>
+	</div>
+	<div id="vote-info" class="vote-area">
+		<p>Below are the details of your <span style="color:red">last</span> cr vote</a></p>
+		<table id="vote-header" class="vote-header">
+			<tr>
+				<td>
+					Status:
+				</td>
+				<td id="vote-header-status">
+					
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Txid:
+				</td>
+				<td id="vote-header-txid">
+					
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Time:
+				</td>
+				<td id="vote-header-time">
+					
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Height:
+				</td>
+				<td id="vote-header-height">
+					
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Votes:
+				</td>
+				<td id="vote-header-amount">
+					
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Candidates:
+				</td>
+				<td id="vote-header-number">
+					
+				</td>
+			</tr>
+		</table>
+
+		<ul id="vote-body" class="candidates">
+			<!--
+			<li>
+				<ul class="candidate-item">
+					<li></li>
+					<li></li>
+				</ul>
+				<p></p>
+			</li>
+			-->
+		</ul>
+	</div>
+
+    <div id="btnArea">
+    	<a id="vote" class="btn btn-success" href="/index.html"> <i class="icon-large"></i> Back to home </a>
+    	
+    </div>
+    <div id="footer">
+    	<p>Powered by <span style="color: red">elaphant.app</span></p>
+    </div>    
+
+    <script type="text/javascript">
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+            
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
+        var data = getUrlParameter("Data");
+        var sign = getUrlParameter("Sign");
+        var txid = getUrlParameter("TXID");
+        var address = getUrlParameter("address");
+
+        var loadData = function(address) {
+        	$("body").loading('toggle');
+	    	$.ajax({
+	            url: 'https://node1.elaphant.app/api/v1/crc/address/'+address+'?pageNum=1&pageSize=1',
+				type: 'get',
+	            data:{},
+	            dataType: "json",
+	            success: function (data) {
+	            	if (data.Error) {
+	            		$("#waiting").show();
+	            		$("#vote-info").hide();
+	            		return;
+            		}
+            		$("#waiting").hide();
+            		$("#vote-info").show();
+	            	var lastVote = data.result[0];
+	            	if (!lastVote) return;
+
+	            	$("#vote-header-status").html(lastVote.Vote_Header.Is_valid);
+	            	$("#vote-header-txid").html("<a href='https://blockchain.elastos.org/tx/"+lastVote.Vote_Header.Txid+"'>"+ lastVote.Vote_Header.Txid.substring(0,12)+"..."+ lastVote.Vote_Header.Txid.substring(52) +"</a>");
+
+	            	var vote_date = new Date(1000*lastVote.Vote_Header.Block_time).toString();
+	            	$("#vote-header-time").text(vote_date.substring(0, vote_date.length-30));
+	            	$("#vote-header-height").text(lastVote.Vote_Header.Height);
+	            	$("#vote-header-amount").text(lastVote.Vote_Header.Value);
+	            	$("#vote-header-number").text(lastVote.Vote_Header.Candidate_num);
+
+
+					var candidates = document.getElementById("vote-body")
+	            	for (var index in lastVote.Vote_Body) {
+	            		var candidate = lastVote.Vote_Header.Candidates[index];
+	            		var item = lastVote.Vote_Body[index];
+
+	            		var item_li = document.createElement('li');
+	            		var item_ul = document.createElement('ul');
+	            		var item_li1 = document.createElement('li');
+	            		var item_li2 = document.createElement('li');
+	            		var item_li3 = document.createElement('li');
+
+	            		$(item_ul).addClass("candidate-item");
+	            		$(item_li1).html("<span style='text-decoration: underline'>" + item.Nickname + "</span>");
+	            		$(item_li2).html("<span style='color:black'>" + candidate.Value + "</span> / " + item.Votes+" Votes ("+ Math.floor(10000*candidate.Value/lastVote.Vote_Header.Value)/100 +"%)");
+	            		$(item_li3).text("did:ela:"+item.Did);
+
+
+	            		item_ul.appendChild(item_li1);
+	            		item_ul.appendChild(item_li2);
+	            		item_ul.appendChild(item_li3);
+	            		item_li.appendChild(item_ul);
+
+	            		candidates.appendChild(item_li);
+	            	}
+
+	            },
+	            error: function () {
+            		$("#waiting").show();
+            		$("#vote-info").hide();
+            		return;
+	            },
+	            complete: function() {
+
+        			$("body").loading('stop');
+	            }
+
+	    	});
+	    };
+
+    	$(document).ready(function() {
+	        if (data && sign) {
+	        	var identity = JSON.parse(data);
+	        	var ret = window.verify(data, sign, identity.PublicKey);
+	        	if (ret)
+	        		loadData(identity.ELAAddress);
+	        	
+	        }
+	        else if (txid) {
+		    	$.ajax({
+		            url: 'https://node1.elaphant.app/api/v1/transaction/'+txid,
+					type: 'get',
+		            data:{},
+		            dataType: "json",
+		            success: function (data) {
+		            	var out_address = data.Result.vout[2].address;
+		            	if (out_address)
+		            		loadData(out_address);
+		            }
+		        });
+
+	        }
+	        else if(address) {
+	        	loadData(address);
+	        }
+
+		} );
+    </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.semanticui.min.css">
+	<link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+	<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+	
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="https://unpkg.com/jquery-easy-loading/dist/jquery.loading.min.js"></script>
+
+	<style>
+		html,body{
+			min-height:100%;
+			_height:100%;
+			margin: 0;
+			padding: 0;
+		}
+
+		#pageTitle {
+			text-align: center; 
+			color: E5E5E5;
+			background-color: 949EB9; 
+			padding: 15px
+
+		}
+
+		#candidates {
+			height: 400px;
+			width:100%;
+		}
+
+		p {
+			margin: 0;
+			font-size: 12;
+		}
+
+		#btnArea {
+			text-align: center; 
+			padding-top: 20px;
+			padding-bottom:50px
+		}
+		#btnArea p{
+			text-align: center; 
+
+		}
+
+		#footer {
+			text-align: center;
+			vertical-align: bottom;
+			height: 20px;
+			margin-top:-20px;
+		}
+
+		.dataTables_filter, .dataTables_info {
+			display: none;
+		}
+
+	</style>
+</head>
+<body>
+	<h1 id='pageTitle'>
+		CRC Voting
+	</h1>
+
+	<p>Click to select candidates, your voting history click <a id="history_btn" href="#">here</a></p>
+	<table id="candidates" class="display">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Nickname</th>
+                <th>Votes</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>No.</th>
+                <th>Nickname</th>
+                <th>Votes</th>
+            </tr>
+        </tfoot>
+    </table>
+    <div id="btnArea">
+    	<a id="vote" class="btn btn-success" href="#"> <i class="icon-large"></i> Vote Now </a>
+    	
+    </div>
+    <div id="footer">
+    	<p>Powered by <span style="color: red">elaphant.app</span></p>
+    </div>
+    <script type="text/javascript">
+    	var return_url = encodeURIComponent(window.location.origin+window.location.pathname+"/../history.html");
+    	$("#history_btn").attr("href", "https://launch.elaphant.app/?appName=CR%20Voting&appTitle=CR%20Voting&autoRedirect=True&redirectURL=elaphant%3A%2F%2Fidentity%3FReturnUrl%3D"+return_url+"%26AppID%3Dc548c4c6fcf643671a2ad165bc76b9a80b6d5a71d6b45f687ad19e3ab49218f31962b2b443f350be26fca6f61619ec793d2f9662b7e9a4f85fc9358ef4fd7258%26PublicKey%3D034c51ddc0844ff11397cc773a5b7d94d5eed05e7006fb229cf965b47f19d27c55%26DID%3DibxNTG1hBPK1rZuoc8fMy4eFQ96UYDAQ4J%26RandomNumber%3D"+Math.floor(Math.random() * 100000000)+"%26AppName%3DCR%20Voting%26RequestInfo%3Delaaddress");
+    	$(document).ready(function() {
+            $("body").loading('toggle');
+	    	$.ajax({
+	            url: 'https://node1.elaphant.app/api/v1/crc/rank/height/99999999?state=active',
+				type: 'get',
+	            data:{},
+	            dataType: "json",
+	            success: function (data) {
+	            	$.fn.dataTable.ext.errMode = 'none';
+	                var dataSource = data.result;
+	                $('#candidates').DataTable( {
+				        data: dataSource,
+				        scrollCollapse: true,
+				        scrollY: document.body.clientHeight - 280,
+				        paging: false,
+				        columns: [
+				            { "data": "Rank" },
+				            { "data": "Nickname" },
+				            { "data": "Votes" }
+				        ]
+				    } );
+
+				    $.extend( true, $.fn.dataTable.defaults, {
+					    "searching": false
+					} );
+				    $('#candidates tbody').on( 'click', 'tr', function () {
+				        $(this).toggleClass('selected');
+				    } );
+	            },
+	            complete: function () {
+
+            		$("body").loading('stop');
+	            }
+
+	    	});
+
+	    	$("#vote").click(function() {
+	    		var data = $('#candidates').DataTable().rows('.selected').data();
+	    		var result = [];
+	    		for (var i=0; i < data.length; ++i) {
+	    			result.push({
+	    				"Did": data[i].Did,
+	    				"Nickname": data[i].Nickname,
+	    			});
+	    		}
+
+	    		var args = encodeURIComponent(JSON.stringify(result));
+	    		
+	    		window.open('./vote.html?candidates='+args);
+	    	});
+		} );
+    </script>
+</body>
+</html>

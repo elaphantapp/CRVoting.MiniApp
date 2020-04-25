@@ -1,0 +1,223 @@
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.semanticui.min.css">
+	<link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+	<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+	
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="https://unpkg.com/jquery-easy-loading/dist/jquery.loading.min.js"></script>
+
+	<style>
+		html,body{
+			min-height:100%;
+			_height:100%;
+			margin: 0;
+			padding: 0;
+		}
+
+		#pageTitle {
+			text-align: center; 
+			color: E5E5E5;
+			background-color: 949EB9; 
+			padding: 15px
+
+		}
+
+		#candidates {
+			width:100%;
+			text-align: center;
+		}
+
+		#candidates table {
+			text-align: center;
+			width:90%;
+			font-size: 12px;
+			margin:auto;
+		}
+
+		#candidates tr {
+			text-align: left;
+		}
+
+		#candidates td {
+			padding: 10px 0 10px 0;
+		}
+
+		/* The slider itself */
+		.slider {
+		  -webkit-appearance: none;  /* Override default CSS styles */
+		  appearance: none;
+		  width: 100%; /* Full-width */
+		  height: 15px; /* Specified height */
+		  background: #d3d3d3; /* Grey background */
+		  outline: none; /* Remove outline */
+		  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+		  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+		  transition: opacity .2s;
+		}
+
+		/* Mouse-over effects */
+		.slider:hover {
+		  opacity: 1; /* Fully shown on mouse-over */
+		}
+
+		/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+		.slider::-webkit-slider-thumb {
+		  -webkit-appearance: none; /* Override default look */
+		  appearance: none;
+		  width: 25px; /* Set a specific slider handle width */
+		  height: 25px; /* Slider handle height */
+		  background: #4CAF50; /* Green background */
+		  cursor: pointer; /* Cursor on hover */
+		}
+
+		.slider::-moz-range-thumb {
+		  width: 25px; /* Set a specific slider handle width */
+		  height: 25px; /* Slider handle height */
+		  background: #4CAF50; /* Green background */
+		  cursor: pointer; /* Cursor on hover */
+		}
+
+		p {
+			margin: 0;
+			font-size: 12;
+		}
+
+		#btnArea {
+			text-align: center; 
+			padding-top: 20px;
+			padding-bottom:50px
+		}
+		#btnArea p{
+			text-align: center; 
+
+		}
+
+		#footer {
+			text-align: center;
+			vertical-align: bottom;
+			height: 20px;
+			margin-top:-20px;
+		}
+
+	</style>
+	<script type="text/javascript">
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+            
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
+        var candidates = getUrlParameter("candidates");
+        if (candidates) {
+        	window.candidates = JSON.parse(decodeURIComponent(candidates));
+        }
+	</script>
+</head>
+<body>
+	<h1 id='pageTitle'>
+		CRC Voting
+	</h1>
+	<p>Please adjust the voting percentage</p>
+
+	<div id="candidates">
+	</div>
+	<hr/>
+	<p>Total votes: <span id="totalPercentage"></span></p>
+    <div id="btnArea">
+    	<a id="votebtn" class="btn btn-success" href="#"> <i class="icon-large"></i> Vote </a>
+    	
+    </div>
+    <div id="footer">
+    	<p>Powered by <span style="color: red">elaphant.app</span></p>
+    </div>    
+
+    <script type="text/javascript">
+    	$(document).ready(function() {
+    	  if (!window.candidates) return;
+    	  var candidates = window.candidates;
+    	  var sum = 0;
+    	  var tb = document.createElement('table');
+  
+		  for(var j = 0; j < candidates.length; j++) {
+		    var row = candidates[j];
+		    
+    	  	var tr = document.createElement('tr');
+		    var td = document.createElement('td');
+		    td.innerText = row.Nickname;
+		    
+		    tr.appendChild(td);
+
+
+		    var td2 = document.createElement('td');
+		    td2.id = row.Did;
+		    td2.setAttribute("class", "percentage");
+		    td2.innerText = parseInt(100/candidates.length) + "%";
+			sum += parseInt(100/candidates.length);
+		  	$("#totalPercentage").text(sum+'%');
+
+		    tr.appendChild(td2);
+		    
+		    var td3 = document.createElement('td');
+
+		    var it = document.createElement('input');
+		    it.setAttribute("type", "range");
+			it.setAttribute("name", row.Did );
+			it.setAttribute("step", "1");
+			it.setAttribute("value", parseInt(100/candidates.length));
+			it.setAttribute("min", "0");
+			it.setAttribute("max", "100");
+			it.setAttribute("class", "slider");
+			it.onchange = function() {
+				document.getElementById( this.name ).innerText=this.value+'%';
+			}
+			td3.appendChild(it);
+		    tr.appendChild(td3);
+
+		    tb.appendChild(tr);
+		  }
+		  
+		  $("#candidates").append(tb);
+
+		  $("input[type=range]").change(function () {
+		  	  sum = 0;
+		  	  $(".percentage").each(function(i, v){
+		  		  sum += parseInt(v.innerText);
+		  	  });
+		  	  $("#totalPercentage").text(sum+'%');
+		  	  if (sum < 1 || sum > 100) {
+		  		  $("#totalPercentage").css("color", "red");
+		  	  }
+		  	  else {
+		  		  $("#totalPercentage").css("color", "black");	
+		  	  }
+		  });
+
+		  $("#votebtn").click(function() {
+		  	  var DIDs = "";
+		  	  var Votes = "";
+		  	  $("input[type=range]").each(function (i, v) {
+		  	  	  DIDs += v.name + ",";
+		  	  	  Votes += v.value + ",";
+		  	  });
+	    	  var return_url = encodeURIComponent(window.location.origin+window.location.pathname+"/../history.html");
+	    	  window.open("https://launch.elaphant.app/?appName=CR%20Voting&appTitle=CR%20Voting&autoRedirect=True&redirectURL=elaphant%3A%2F%2Felacrcvote%3FReturnUrl%3D"+return_url+"%26AppID%3Dc548c4c6fcf643671a2ad165bc76b9a80b6d5a71d6b45f687ad19e3ab49218f31962b2b443f350be26fca6f61619ec793d2f9662b7e9a4f85fc9358ef4fd7258%26PublicKey%3D034c51ddc0844ff11397cc773a5b7d94d5eed05e7006fb229cf965b47f19d27c55%26DID%3DibxNTG1hBPK1rZuoc8fMy4eFQ96UYDAQ4J%26AppName%3DCR%20Voting%26Candidates="+encodeURIComponent(DIDs.substring(0, DIDs.lastIndexOf(',')))+"%26Votes="+encodeURIComponent(Votes.substring(0, Votes.lastIndexOf(','))));
+
+		  });
+
+		});
+    </script>
+</body>
+</html>
