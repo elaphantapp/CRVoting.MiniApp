@@ -140,7 +140,7 @@
 
 	    		var args = encodeURIComponent(JSON.stringify(result));
 	    		
-	    		window.open('./vote.html?candidates='+args);
+	    		window.location.href = './vote.html?candidates='+args;
 	    	});
 		} );
     </script>
