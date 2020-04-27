@@ -115,7 +115,7 @@
     		}
 
     		var args = encodeURIComponent(JSON.stringify(result));
-    		window.event.returnValue = false;
+    		window.location.href = './vote.html?candidates='+args;
     		return;
     	}
 
@@ -156,6 +156,7 @@
 	            }
 
 	    	});
+
 		} );
     </script>
 </body>
