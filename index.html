@@ -85,8 +85,7 @@
         </tfoot>
     </table>
     <div id="btnArea">
-    	<a id="vote" class="btn btn-success" href="#"> <i class="icon-large"></i> Vote Now </a>
-    	<a class="btn btn-success" href="/vote.html"> <i class="icon-large"></i> Vote 2 </a>
+    	<a id="vote" class="btn btn-success" > <i class="icon-large"></i> Vote Now </a>
     	
     </div>
     <div id="footer">
@@ -154,13 +153,8 @@
 	    		}
 
 	    		var args = encodeURIComponent(JSON.stringify(result));
+	    		window.event.returnValue = false;
 	    		
-	    		window.location.href = './vote.html?candidates='+args;
-					spop({
-						position  : 'top-center',
-						template: 'pos 2',
-						autoclose: 3000
-					});
 	    	});
 		} );
     </script>
