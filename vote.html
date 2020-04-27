@@ -6,10 +6,12 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.semanticui.min.css">
 	<link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 	<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+	<link href="css/spop.min.css" rel="stylesheet">
 	
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="https://unpkg.com/jquery-easy-loading/dist/jquery.loading.min.js"></script>
+	<script type="text/javascript" src="js/spop.min.js"></script>
 	<title>CRC Voting</title>
 	<style>
 		html,body{
@@ -303,9 +305,22 @@
 
 		  $("#votebtn").click(function() {
 		  	  var sum = parseInt($("#totalPercentage").text());
-		  	  if(sum > 100 || sum <= 0) return;
+		  	  if(sum > 100 || sum <= 0) {
+				spop({
+					position  : 'top-center',
+					template: 'Your choice exceeds the total number of votes, please readjust.',
+					autoclose: 3000
+				});
+		  	  }
 
 	    	  var return_url = encodeURIComponent(window.location.href.substr(0, window.location.href.lastIndexOf('/'))+"/history.html");
+
+			  spop({
+				  position : 'top-center',
+				  template : 'test1',
+				  autoclose: 3000
+			  });
+
 	    	  window.location.href = "https://launch.elaphant.app/?appName=CR%20Voting&appTitle=CR%20Voting&autoRedirect=True&redirectURL=elaphant%3A%2F%2Felacrcvote%3FReturnUrl%3D"+return_url+"%26AppID%3De243f486555b96c298b86a237b5adc966c7a3b99641dcf6010aa1891d1a0a82c990264fdd8269c581afedd24058b96bf5f8ec168b77917a63dc2721801485d8f%26PublicKey%3D034c51ddc0844ff11397cc773a5b7d94d5eed05e7006fb229cf965b47f19d27c55%26DID%3DibxNTG1hBPK1rZuoc8fMy4eFQ96UYDAQ4J%26AppName%3DCR%20Voting%26Candidates="+strDIDs+"%26Votes="+strVotes;
 
 		  });

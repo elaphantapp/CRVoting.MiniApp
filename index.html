@@ -147,30 +147,20 @@
 	    		var result = [];
 	    		for (var index = 0; index < data.length; index ++ ) {
 	    			var item = data[index];
-					spop({
-						position  : 'top-center',
-						template: 'index:'+index,
-						autoclose: 3000
-					});
 	    			result.push({
 	    				"Did": item.Did,
 	    				"Nickname": item.Nickname,
 	    			});
 	    		}
+
+	    		var args = encodeURIComponent(JSON.stringify(result));
+	    		
+	    		window.location.href = './vote.html?candidates='+args;
 					spop({
 						position  : 'top-center',
 						template: 'pos 2',
 						autoclose: 3000
 					});
-
-	    		var args = encodeURIComponent(JSON.stringify(result));
-	    		
-					spop({
-						position  : 'top-center',
-						template: 'pos 3',
-						autoclose: 3000
-					});
-	    		window.location.href = './vote.html?candidates='+args;
 	    	});
 		} );
     </script>
