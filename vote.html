@@ -207,25 +207,30 @@
     </div>    
 
     <script type="text/javascript">
-    	$(document).ready(function() {
-    	  if (!window.candidates) return;
-
-          var getUrlParameter = function getUrlParameter(sParam) {
-            var sPageURL = window.location.search.substring(1),
-                sURLVariables = sPageURL.split('&'),
-                sParameterName,
-                i;
-            
-            for (i = 0; i < sURLVariables.length; i++) {
-                sParameterName = sURLVariables[i].split('=');
-
-                if (sParameterName[0] === sParam) {
-                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+    	function isPC() {
+            var userAgentInfo = navigator.userAgent;
+            var Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"
+            ];
+            var flag = true;
+            for (var v = 0; v < Agents.length; v++) {
+                if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                    flag = false;
+                    break;
                 }
             }
-          };
+            return flag;
+        }
 
-    	  var browserType = getUrlParameter("browser");
+        function isWechat() {
+            var ua = navigator.userAgent.toLowerCase();
+            return /micromessenger/i.test(ua) || typeof navigator.wxuserAgent !== 'undefined';
+        }
+
+    	$(document).ready(function() {
+    	  if (!window.candidates) return;            
+
 
 	  	  var strDIDs = "";
 	  	  var strVotes = "";
@@ -334,11 +339,11 @@
 
 	    	  var crvoting_url = "elaphant://elacrcvote?ReturnUrl="+return_url+"&AppID=e243f486555b96c298b86a237b5adc966c7a3b99641dcf6010aa1891d1a0a82c990264fdd8269c581afedd24058b96bf5f8ec168b77917a63dc2721801485d8f&PublicKey=034c51ddc0844ff11397cc773a5b7d94d5eed05e7006fb229cf965b47f19d27c55&DID=ibxNTG1hBPK1rZuoc8fMy4eFQ96UYDAQ4J&AppName=CR%20Voting&Candidates="+strDIDs+"&Votes="+strVotes;
 
-	    	  if (browserType && browserType == "elaphant") {
-	    	  	window.location.href = crvoting_url;
+	    	  if (isPC() || isWechat()) {
+	    	  	  window.location.href = "https://launch.elaphant.app/?appName=CR%20Voting&appTitle=CR%20Voting&autoRedirect=True&redirectURL="+encodeURIComponent(crvoting_url);
 	    	  }
 	    	  else {
-	    	  	window.location.href = "https://launch.elaphant.app/?appName=CR%20Voting&appTitle=CR%20Voting&autoRedirect=True&redirectURL="+encodeURIComponent(crvoting_url);
+				  window.location.href = crvoting_url;	    	  	
 	    	  }
 	    	  return;
 
