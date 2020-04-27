@@ -6,10 +6,12 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.semanticui.min.css">
 	<link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 	<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+	<link href="css/spop.min.css" rel="stylesheet">
 	
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="https://unpkg.com/jquery-easy-loading/dist/jquery.loading.min.js"></script>
+	<script type="text/javascript" src="js/spop.min.js"></script>
 
 	<style>
 		html,body{
@@ -136,8 +138,14 @@
 
 	    		if (data.length <= 0) {
 	    			$("body").loading('stop');
+					spop({
+						template: 'Please select at least one candidate.',
+						autoclose: 3000
+					});
 	    			return;
 	    		}
+
+	    		try {
 	    		var result = [];
 	    		for (var index = 0; index < data.length; index ++ ) {
 	    			var item = data[index];
@@ -150,6 +158,15 @@
 	    		var args = encodeURIComponent(JSON.stringify(result));
 	    		
 	    		window.location.href = './vote.html?candidates='+args;
+	    		}
+	    		catch (e) {
+	    			alert(e.message);
+					spop({
+						position  : 'top-center',
+						template: e.message,
+						autoclose: 3000
+					});
+	    		}
 	    	});
 		} );
     </script>
