@@ -133,11 +133,9 @@
 	    	});
 
 	    	$("#vote").click(function() {
-            	$("body").loading('toggle');
 	    		var data = $('#candidates').DataTable().rows('.selected').data();
 
 	    		if (data.length <= 0) {
-	    			$("body").loading('stop');
 					spop({
 						position  : 'top-center',
 						template: 'Please select at least one candidate.',
@@ -146,7 +144,6 @@
 	    			return;
 	    		}
 
-	    		try {
 	    		var result = [];
 	    		for (var index = 0; index < data.length; index ++ ) {
 	    			var item = data[index];
@@ -174,15 +171,6 @@
 						autoclose: 3000
 					});
 	    		window.location.href = './vote.html?candidates='+args;
-	    		}
-	    		catch (e) {
-	    			alert(e.message);
-					spop({
-						position  : 'top-center',
-						template: e.message,
-						autoclose: 3000
-					});
-	    		}
 	    	});
 		} );
     </script>
