@@ -139,6 +139,7 @@
 	    		if (data.length <= 0) {
 	    			$("body").loading('stop');
 					spop({
+						position  : 'top-center',
 						template: 'Please select at least one candidate.',
 						autoclose: 3000
 					});
@@ -149,14 +150,29 @@
 	    		var result = [];
 	    		for (var index = 0; index < data.length; index ++ ) {
 	    			var item = data[index];
+					spop({
+						position  : 'top-center',
+						template: 'index:'+index,
+						autoclose: 3000
+					});
 	    			result.push({
 	    				"Did": item.Did,
 	    				"Nickname": item.Nickname,
 	    			});
 	    		}
+					spop({
+						position  : 'top-center',
+						template: 'pos 2',
+						autoclose: 3000
+					});
 
 	    		var args = encodeURIComponent(JSON.stringify(result));
 	    		
+					spop({
+						position  : 'top-center',
+						template: 'pos 3',
+						autoclose: 3000
+					});
 	    		window.location.href = './vote.html?candidates='+args;
 	    		}
 	    		catch (e) {
