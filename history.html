@@ -247,7 +247,7 @@
         var txid = getUrlParameter("TXID");
         var address = getUrlParameter("address");
 
-    	if (txid.length != 64) {
+    	if (txid && txid.length != 64) {
     		txid = txid.substr(2, 64);
     	}
 
