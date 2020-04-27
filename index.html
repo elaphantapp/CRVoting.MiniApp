@@ -84,13 +84,15 @@
     </table>
     <div id="btnArea">
     	<a id="vote" class="btn btn-success" href="#"> <i class="icon-large"></i> Vote Now </a>
+    	<a class="btn btn-success" href="/vote.html"> <i class="icon-large"></i> Vote 2 </a>
     	
     </div>
     <div id="footer">
     	<p>Powered by <span style="color: red">elaphant.app</span></p>
     </div>
     <script type="text/javascript">
-    	var return_url = encodeURIComponent(window.location.origin+window.location.pathname+"/../history.html");
+
+    	var return_url = encodeURIComponent(window.location.href.substr(0, window.location.href.lastIndexOf('/'))+"/history.html");
     	$("#history_btn").attr("href", "https://launch.elaphant.app/?appName=CR%20Voting&appTitle=CR%20Voting&autoRedirect=True&redirectURL=elaphant%3A%2F%2Fidentity%3FReturnUrl%3D"+return_url+"%26AppID%3De243f486555b96c298b86a237b5adc966c7a3b99641dcf6010aa1891d1a0a82c990264fdd8269c581afedd24058b96bf5f8ec168b77917a63dc2721801485d8f%26PublicKey%3D034c51ddc0844ff11397cc773a5b7d94d5eed05e7006fb229cf965b47f19d27c55%26DID%3DibxNTG1hBPK1rZuoc8fMy4eFQ96UYDAQ4J%26RandomNumber%3D"+Math.floor(Math.random() * 100000000)+"%26AppName%3DCR%20Voting%26RequestInfo%3Delaaddress");
     	$(document).ready(function() {
             $("body").loading('toggle');
@@ -105,7 +107,7 @@
 	                $('#candidates').DataTable( {
 				        data: dataSource,
 				        scrollCollapse: true,
-				        scrollY: document.body.clientHeight - 280,
+				        scrollY: document.body.clientHeight - 290,
 				        paging: false,
 				        columns: [
 				            { "data": "Rank" },
@@ -129,12 +131,19 @@
 	    	});
 
 	    	$("#vote").click(function() {
+            	$("body").loading('toggle');
 	    		var data = $('#candidates').DataTable().rows('.selected').data();
+
+	    		if (data.length <= 0) {
+	    			$("body").loading('stop');
+	    			return;
+	    		}
 	    		var result = [];
-	    		for (var i=0; i < data.length; ++i) {
+	    		for (var index = 0; index < data.length; index ++ ) {
+	    			var item = data[index];
 	    			result.push({
-	    				"Did": data[i].Did,
-	    				"Nickname": data[i].Nickname,
+	    				"Did": item.Did,
+	    				"Nickname": item.Nickname,
 	    			});
 	    		}
 

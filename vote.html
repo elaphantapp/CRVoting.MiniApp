@@ -10,7 +10,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="https://unpkg.com/jquery-easy-loading/dist/jquery.loading.min.js"></script>
-
+	<title>CRC Voting</title>
 	<style>
 		html,body{
 			min-height:100%;
@@ -208,10 +208,17 @@
     	$(document).ready(function() {
     	  if (!window.candidates) return;
 
+	  	  var strDIDs = "";
+	  	  var strVotes = "";
+	  	  
     	  var updateTotal = function () {
-		  	  var sum = 0;
+    	  	  var sum = 0;
+    	  	  var DIDs = "";
+    	  	  var Votes = "";
 		  	  $(".range-slider__range").each(function(i, v){
 		  		  sum += parseInt(v.value);
+		  	  	  DIDs += v.name + ",";
+		  	  	  Votes += v.value + ",";
 		  	  });
 		  	  $("#totalPercentage").text(sum+'%');
 		  	  if (sum < 1 || sum > 100) {
@@ -220,6 +227,8 @@
 		  	  else {
 		  		  $("#totalPercentage").css("color", "black");	
 		  	  }
+		  	  strDIDs = encodeURIComponent(DIDs.substring(0, DIDs.lastIndexOf(',')));
+		  	  strVotes = encodeURIComponent(Votes.substring(0, Votes.lastIndexOf(',')));
     	  };
 
 		  var rangeSlider = function(){
@@ -244,7 +253,6 @@
 
 
     	  var candidates = window.candidates;
-    	  var sum = 0;
     	  var tb = document.createElement('table');
   
 		  for(var j = 0; j < candidates.length; j++) {
@@ -294,19 +302,11 @@
 		  rangeSlider();
 
 		  $("#votebtn").click(function() {
-		  	  var DIDs = "";
-		  	  var Votes = "";
-		  	  var sum = 0;
-		  	  $("input[type=range]").each(function (i, v) {
-		  	  	  DIDs += v.name + ",";
-		  	  	  Votes += v.value + ",";
-		  	  	  sum += parseInt(v.value);
-		  	  });
-
+		  	  var sum = parseInt($("#totalPercentage").text());
 		  	  if(sum > 100 || sum <= 0) return;
 
-	    	  var return_url = encodeURIComponent(window.location.origin+window.location.pathname+"/../history.html");
-	    	  window.location.href = "https://launch.elaphant.app/?appName=CR%20Voting&appTitle=CR%20Voting&autoRedirect=True&redirectURL=elaphant%3A%2F%2Felacrcvote%3FReturnUrl%3D"+return_url+"%26AppID%3De243f486555b96c298b86a237b5adc966c7a3b99641dcf6010aa1891d1a0a82c990264fdd8269c581afedd24058b96bf5f8ec168b77917a63dc2721801485d8f%26PublicKey%3D034c51ddc0844ff11397cc773a5b7d94d5eed05e7006fb229cf965b47f19d27c55%26DID%3DibxNTG1hBPK1rZuoc8fMy4eFQ96UYDAQ4J%26AppName%3DCR%20Voting%26Candidates="+encodeURIComponent(DIDs.substring(0, DIDs.lastIndexOf(',')))+"%26Votes="+encodeURIComponent(Votes.substring(0, Votes.lastIndexOf(',')));
+	    	  var return_url = encodeURIComponent(window.location.href.substr(0, window.location.href.lastIndexOf('/'))+"/history.html");
+	    	  window.location.href = "https://launch.elaphant.app/?appName=CR%20Voting&appTitle=CR%20Voting&autoRedirect=True&redirectURL=elaphant%3A%2F%2Felacrcvote%3FReturnUrl%3D"+return_url+"%26AppID%3De243f486555b96c298b86a237b5adc966c7a3b99641dcf6010aa1891d1a0a82c990264fdd8269c581afedd24058b96bf5f8ec168b77917a63dc2721801485d8f%26PublicKey%3D034c51ddc0844ff11397cc773a5b7d94d5eed05e7006fb229cf965b47f19d27c55%26DID%3DibxNTG1hBPK1rZuoc8fMy4eFQ96UYDAQ4J%26AppName%3DCR%20Voting%26Candidates="+strDIDs+"%26Votes="+strVotes;
 
 		  });
 
