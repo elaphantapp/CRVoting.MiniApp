@@ -84,6 +84,7 @@
             </tr>
         </tfoot>
     </table>
+    <p>Total <span id="total_votes" style="color: red; font-size: 1rem"></span> ELA.</p>
     <div id="btnArea">
     	<a id="vote" class="btn btn-success" href="javascript:voteClick()" > <i class="icon-large"></i> Vote Now </a>
     	
@@ -170,6 +171,12 @@
 				            { "data": "Votes" }
 				        ]
 				    } );
+
+	                var totalVotes = 0;
+				    for (var item of dataSource) {
+				    	totalVotes += parseInt(item.Votes);
+				    }
+				    $("#total_votes").text(totalVotes);
 
 				    $.extend( true, $.fn.dataTable.defaults, {
 					    "searching": false
