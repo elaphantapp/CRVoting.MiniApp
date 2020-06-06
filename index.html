@@ -224,7 +224,7 @@
 	    					var est = currTimestamp + parseInt((currTimestamp - ret2.Result.time) / TestingBlocks) * diff;
 	    					var estDate = moment(est * 1000);
 
-	    					var msg = " There are <span style='color:blue'>"+diff+"</span> blocks before the end, the estimated end time is in <b>" + estDate.format('lll')+"</b>. It is calculated based on the average time of the last "+TestingBlocks+" blocks.";
+	    					var msg = " Left <span style='color:blue'>"+diff+"</span> blocks, estimated end time <b>" + estDate.format('lll')+"</b>. Based on the last "+TestingBlocks+" blocks.";
 	    					$("#deadline").html(msg);
 	    				});            		
             	});
