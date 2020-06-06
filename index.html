@@ -12,6 +12,7 @@
 	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="https://unpkg.com/jquery-easy-loading/dist/jquery.loading.min.js"></script>
 	<script type="text/javascript" src="js/spop.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment-with-locales.min.js"></script>
 	<title>CR Voting</title>
 	<style>
 		html,body{
@@ -85,6 +86,7 @@
         </tfoot>
     </table>
     <p>Total <span id="total_votes" style="color: red; font-size: 1rem"></span> ELA.</p>
+    <p id="deadline"></p>
     <div id="btnArea">
     	<a id="vote" class="btn btn-success" href="javascript:voteClick()" > <i class="icon-large"></i> Vote Now </a>
     	
@@ -189,9 +191,43 @@
 
             		$("body").loading('stop');
 	            }
-
 	    	});
 
+	    	var currHeight = 0;
+	    	const EndingHeight = 658930;
+	    	const TestingBlocks = 60;
+
+            fetch("https://node1.elaphant.app/api/v1/currHeight")
+            	.then (function(response) {
+            		return response.json();
+            	})
+            	.then (function (ret) {
+            		currHeight = parseInt(ret.result);
+
+            		var diff = EndingHeight - currHeight;
+            		if (diff < 0) return;
+
+
+        			var currTimestamp = 0;
+        			fetch("https://node1.elaphant.app/api/v1/block/details/height/"+currHeight)
+		            	.then (function (response) {
+		            		return response.json();
+		            	})
+		            	.then (function (ret) {
+		            		currTimestamp = ret.Result.time;
+		            		return fetch("https://node1.elaphant.app/api/v1/block/details/height/"+(currHeight - TestingBlocks));
+		            	})
+		            	.then (function (response) {
+		            		return response.json();
+		            	})
+		            	.then (function (ret2) {
+	    					var est = currTimestamp + parseInt((currTimestamp - ret2.Result.time) / TestingBlocks) * diff;
+	    					var estDate = moment(est * 1000);
+
+	    					var msg = " There are <span style='color:blue'>"+diff+"</span> blocks before the end, the estimated end time is in <b>" + estDate.format('lll')+"</b>. It is calculated based on the average time of the last "+TestingBlocks+" blocks.";
+	    					$("#deadline").html(msg);
+	    				});            		
+            	});
 		} );
     </script>
 </body>
