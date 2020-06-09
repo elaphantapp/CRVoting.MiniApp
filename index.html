@@ -96,6 +96,21 @@
     </div>
     <script type="text/javascript">
 
+        function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+            var paramNum = sURLVariables.length;
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
+
     	function isPC() {
             var userAgentInfo = navigator.userAgent;
             var Agents = ["Android", "iPhone",
@@ -153,9 +168,13 @@
     	$("#history_btn").attr("href", history_url);
     	$(document).ready(function() {
 
+    		var targetHeight = getUrlParameter("height");
+    		if (!targetHeight)
+    			targetHeight = 658930;
+
             $("body").loading('toggle');
 	    	$.ajax({
-	            url: 'https://node1.elaphant.app/api/v1/crc/rank/height/99999999?state=active',
+	            url: 'https://node1.elaphant.app/api/v1/crc/rank/height/'+targetHeight+'?state=active',
 				type: 'get',
 	            data:{},
 	            dataType: "json",
@@ -165,12 +184,12 @@
 	                $('#candidates').DataTable( {
 				        data: dataSource,
 				        scrollCollapse: true,
-				        scrollY: document.body.clientHeight - 290,
+				        scrollY: document.body.clientHeight - 300,
 				        paging: false,
 				        columns: [
 				            { "data": "Rank" },
 				            { "data": "Nickname" },
-				            { "data": "Votes" }
+				            { "data": "Votes", "render": function(data, type, row) { return parseInt(data); } }
 				        ]
 				    } );
 
