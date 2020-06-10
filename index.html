@@ -189,13 +189,13 @@
 				        columns: [
 				            { "data": "Rank" },
 				            { "data": "Nickname" },
-				            { "data": "Votes", "render": function(data, type, row) { return parseInt(data); } }
+				            { "data": "Value", "render": function(data, type, row) { return parseInt(data); } }
 				        ]
 				    } );
 
 	                var totalVotes = 0;
 				    for (var item of dataSource) {
-				    	totalVotes += parseInt(item.Votes);
+				    	totalVotes += parseInt(item.Value);
 				    }
 				    $("#total_votes").text(totalVotes);
 
